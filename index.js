@@ -46,7 +46,11 @@ client.on('messageCreate', (msg) => {
 });
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  // res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.json({
+    message: 'Success',
+    data: 'null',
+  });
 });
 
 app.get('/api/all', async (req, res) => {
