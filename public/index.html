@@ -34,7 +34,7 @@
         <button type="submit" class="bg-purple-500 text-white py-2 px-4 rounded">
           Update Command
         </button>
-        <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded">
+        <button type="button" onclick='emptyUpdateForm()' class="bg-yellow-500 text-white py-2 px-4 rounded">
           ✖
         </button>
       </form>
@@ -57,7 +57,8 @@
   </div>
 
   <script>
-    const API_URL = 'http://localhost:5000';
+    const API_URL = window.location.origin;
+    console.log(window.location.origin)
 
     // Function to fetch commands
     const fetchCommands = async () => {
@@ -95,6 +96,11 @@
     function fillUpdateForm(oldKey, value) {
       document.getElementById('oldKey').value = oldKey;
       document.getElementById('newValue').value = value;
+    }
+    function emptyUpdateForm() {
+      document.getElementById('oldKey').value = "";
+      document.getElementById('newKey').value = "";
+      document.getElementById('newValue').value = "";
     }
 
     // Function to delete a command
