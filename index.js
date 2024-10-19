@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/all', async (req, res) => {
+app.get('/api/all', async (req, res) => {
   try {
     const data = await fetchJSON();
     res.json({
@@ -65,7 +65,7 @@ app.get('/all', async (req, res) => {
   }
 });
 
-app.post('/', async (req, res) => {
+app.post('/api/', async (req, res) => {
   const { key, value } = req.body;
   console.log(req.body);
   try {
@@ -80,7 +80,7 @@ app.post('/', async (req, res) => {
   }
 });
 
-app.put('/', async (req, res) => {
+app.put('/api/', async (req, res) => {
   const { oldKey, newKey, newValue } = req.body;
   try {
     const success = await updateKey(oldKey, newKey, newValue);
@@ -94,7 +94,7 @@ app.put('/', async (req, res) => {
   }
 });
 
-app.delete('/', async (req, res) => {
+app.delete('/api/', async (req, res) => {
   const { key } = req.body;
   try {
     const success = await deleteKey(key);
