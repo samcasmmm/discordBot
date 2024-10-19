@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Discord Bot Command Manager</title>
+</head>
+
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Discord Bot Command Manager</h1>
+
+    <!-- Add Command -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">Add Command</h2>
+      <form id="addCommandForm">
+        <input type="text" id="addKey" placeholder="Key" class="border p-2 mr-2 rounded" required />
+        <input type="text" id="addValue" placeholder="Value" class="border p-2 mr-2 rounded" required />
+        <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">
+          Add Command
+        </button>
+      </form>
+    </div>
+
+    <!-- Update Command -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">Update Command</h2>
+      <form id="updateCommandForm">
+        <input type="text" id="oldKey" placeholder="Old Key" class="border p-2 mr-2 rounded" required />
+        <input type="text" id="newKey" placeholder="New Key" class="border p-2 mr-2 rounded" required />
+        <input type="text" id="newValue" placeholder="New Value" class="border p-2 mr-2 rounded" required />
+        <button type="submit" class="bg-purple-500 text-white py-2 px-4 rounded">
+          Update Command
+        </button>
+        <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded">
+          ✖
+        </button>
+      </form>
+    </div>
+
+    <!-- Fetch Commands -->
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">Fetch All Commands</h2>
+      <table id="commandTable" class="min-w-full bg-white mt-2 rounded shadow">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="py-2 px-4 border">Command</th>
+            <th class="py-2 px-4 border">Reply</th>
+            <th class="py-2 px-4 border">Action</th>
+          </tr>
+        </thead>
+        <tbody id="commandList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000';
+
+    // Function to fetch commands
+    const fetchCommands = async () => {
+      const response = await fetch(`${API_URL}/all`);
+      const data = await response.json();
+      const commandList = document.getElementById('commandList');
+
+      // Clear previous rows
+      commandList.innerHTML = '';
+
+      // Populate the table with the fetched commands
+      Object.entries(data.data).forEach(([key, value]) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td class="py-2 px-4 border">${key}</td>
+        <td class="py-2 px-4 border">${value}</td>
+        <td class="py-2 px-4 border flex items-center justify-center gap-4">
+
+             <button 
+        class="bg-purple-200 transition ease-in-out duration-200 hover:bg-purple-500 text-white py-1 px-2 rounded" 
+        onclick="fillUpdateForm('${key}', '${value}')">
+        Update
+      </button>
+
+          <button class="bg-yellow-200 transition ease-in-out duration-200 hover:bg-yellow-500 text-white py-1 px-2 rounded"     onclick="deleteCommand('${key}')">
+            Delete
+          </button>
+     
+    </td>
+  `;
+        commandList.appendChild(row);
+      });
+    };
+
+    function fillUpdateForm(oldKey, value) {
+      document.getElementById('oldKey').value = oldKey;
+      document.getElementById('newValue').value = value;
+    }
+
+    // Function to delete a command
+    const deleteCommand = async (key) => {
+      await fetch(`${API_URL}/`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key }),
+      });
+      fetchCommands(); // Refresh the command list after deleting
+    };
+
+    // Fetch commands on page load
+    window.onload = fetchCommands;
+
+    document.getElementById('addCommandForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const key = document.getElementById('addKey').value;
+      const value = document.getElementById('addValue').value;
+      await fetch(`${API_URL}/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key, value }),
+      });
+      e.target.reset();
+      fetchCommands(); // Refresh the command list after adding
+    };
+
+    document.getElementById('updateCommandForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const oldKey = document.getElementById('oldKey').value;
+      const newKey = document.getElementById('newKey').value;
+      const newValue = document.getElementById('newValue').value;
+      await fetch(`${API_URL}/`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ oldKey, newKey, newValue }),
+      });
+      e.target.reset();
+      fetchCommands(); // Refresh the command list after updating
+    };
+  </script>
+</body>
+
+</html>
