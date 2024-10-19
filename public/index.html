@@ -105,7 +105,7 @@
 
     // Function to delete a command
     const deleteCommand = async (key) => {
-      await fetch(`${API_URL}/`, {
+      await fetch(`${API_URL}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key }),
@@ -120,7 +120,7 @@
       e.preventDefault();
       const key = document.getElementById('addKey').value;
       const value = document.getElementById('addValue').value;
-      await fetch(`${API_URL}/`, {
+      await fetch(`${API_URL}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key, value }),
@@ -134,7 +134,7 @@
       const oldKey = document.getElementById('oldKey').value;
       const newKey = document.getElementById('newKey').value;
       const newValue = document.getElementById('newValue').value;
-      await fetch(`${API_URL}/`, {
+      await fetch(`${API_URL}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ oldKey, newKey, newValue }),
