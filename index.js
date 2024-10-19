@@ -69,7 +69,7 @@ app.get('/api/all', async (req, res) => {
   }
 });
 
-app.post('/api/', async (req, res) => {
+app.post('/api/add', async (req, res) => {
   const { key, value } = req.body;
   console.log(req.body);
   try {
@@ -84,7 +84,7 @@ app.post('/api/', async (req, res) => {
   }
 });
 
-app.put('/api/', async (req, res) => {
+app.put('/api/update', async (req, res) => {
   const { oldKey, newKey, newValue } = req.body;
   try {
     const success = await updateKey(oldKey, newKey, newValue);
@@ -98,7 +98,7 @@ app.put('/api/', async (req, res) => {
   }
 });
 
-app.delete('/api/', async (req, res) => {
+app.delete('/api/delete', async (req, res) => {
   const { key } = req.body;
   try {
     const success = await deleteKey(key);
